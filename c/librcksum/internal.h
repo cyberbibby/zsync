@@ -80,6 +80,9 @@ struct rcksum_state {
     /* Temp file for output */
     char *filename;
     int fd;
+
+    /* local id offset, used in upload mode to match blocks */
+    int lid_offset;
 };
 
 #define BITHASHBITS 3
@@ -90,6 +93,12 @@ struct rcksum_state {
 static inline zs_blockid get_HE_blockid(const struct rcksum_state *z,
                                         const struct hash_entry *e) {
     return e - z->blockhashes;
+}
+
+/* From a file offset return the corresponding local file blockid */
+static inline zs_blockid get_L_blockid(struct rcksum_state *const z, off_t offset, int x) {
+    int lid = (offset  + x) / z->blocksize;
+    return offset ? lid - z->context/z->blocksize : lid;
 }
 
 void add_to_ranges(struct rcksum_state *z, zs_blockid n);
