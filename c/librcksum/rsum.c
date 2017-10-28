@@ -132,7 +132,11 @@ static void write_blocks(struct rcksum_state *z, const unsigned char *data,
  * buf[] (which must be at least len bytes long) */
 ssize_t rcksum_read_known_data(struct rcksum_state *z, unsigned char *buf,
                                off_t offset, size_t len) {
+#ifdef Q_OS_UNIX
     ssize_t rc = pread(z->fd, buf, len, offset);
+#else
+    size_t rc = 0;
+#endif
     return rc;
 }
 

@@ -16,9 +16,15 @@
 #ifndef ZSGLOBAL_H
 #define ZSGLOBAL_H
 
+#include <qglobal.h>
+#include <stdint.h>
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
+#endif
+
+#if defined(Q_OS_UNIX)
+# include <arpa/inet.h>
 #endif
 
 #if defined(__GNUC__) && defined (__OpenBSD__)

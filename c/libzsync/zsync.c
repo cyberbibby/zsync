@@ -42,8 +42,6 @@
 #include <ctype.h>
 #include <time.h>
 
-#include <arpa/inet.h>
-
 #ifdef WITH_DMALLOC
 # include <dmalloc.h>
 #endif
@@ -54,6 +52,10 @@
 #include "zsync.h"
 #include "sha1.h"
 #include "zmap.h"
+
+#if defined(Q_OS_WIN)
+# include <winsock2.h>
+#endif
 
 /* Probably we really want a table of compression methods here. But I've only
  * implemented SHA1 so this is it for now. */
@@ -286,9 +288,11 @@ struct zsync_state *zsync_begin(FILE * f) {
                     }
                 }
             }
+#if 0
             else if (!strcmp(buf, "MTime")) {
                 zs->mtime = parse_822(p);
             }
+#endif
             else if (!safelines || !strstr(safelines, buf)) {
                 fprintf(stderr,
                         "unrecognised tag %s - you need a newer version of zsync.\n",
@@ -359,6 +363,7 @@ static int zsync_read_blocksums(struct zsync_state *zs, FILE * f,
     return 0;
 }
 
+#if 0
 /* parse_822(buf[])
  * Parse an RFC822 date string. Returns a time_t, or -1 on failure. 
  * E.g. Tue, 25 Jul 2006 20:02:17 +0000
@@ -372,6 +377,7 @@ static time_t parse_822(const char* ts) {
     }
     return mktime(&t);
 }
+#endif
 
 /* zsync_hint_decompress(self)
  * Returns true if we think we'll be able to download compressed data to get
