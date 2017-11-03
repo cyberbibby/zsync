@@ -470,15 +470,17 @@ off_t *zsync_needed_byte_ranges(struct zsync_state * zs, int *num, int type) {
 
     /* Request all needed block ranges */
     zs_blockid *blrange = rcksum_needed_block_ranges(zs->rs, &nrange, 0, 0x7fffffff);
-    if (!blrange)
-        return NULL;
+
 
     /* Allocate space for byte ranges */
-    byterange = malloc(2 * nrange * sizeof *byterange);
+    byterange = malloc(2 * (nrange == 0 ? 1 : nrange) * sizeof *byterange);
     if (!byterange) {
         free(blrange);
         return NULL;
     }
+
+    if (!blrange)
+        return byterange;
 
     /* Now convert blocks to bytes.
      * Note: Must cast one operand to off_t as both blocksize and blrange[x]
