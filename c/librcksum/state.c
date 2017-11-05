@@ -105,9 +105,9 @@ struct rcksum_state *rcksum_init(zs_blockid nblocks, size_t blocksize,
  * Returns temporary filename to caller as malloced string.
  * Ownership of the file passes to the caller - the function returns NULL if
  * called again, and it is up to the caller to deal with the file. */
-char *rcksum_filename(struct rcksum_state *rs) {
+char *rcksum_filename(struct rcksum_state *rs, char* next) {
     char *p = rs->filename;
-    rs->filename = NULL;
+    rs->filename = strdup(next);
     return p;
 }
 
@@ -127,8 +127,10 @@ void rcksum_end(struct rcksum_state *z) {
     if (z->fd != -1)
         close(z->fd);
     if (z->filename) {
-        unlink(z->filename);
+        if (strncmp(z->filename, "rcksum-", 7) == 0)
+            unlink(z->filename);
         free(z->filename);
+        z->filename = NULL;
     }
 
     /* Free other allocated memory */
