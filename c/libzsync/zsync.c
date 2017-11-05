@@ -611,10 +611,12 @@ int zsync_complete(struct zsync_state *zs) {
         rc = -1;
     }
 
+#ifdef INTERNAL_SHA1
     /* Do checksum check */
     if (rc == 0 && zs->checksum && !strcmp(zs->checksum_method, ckmeth_sha1)) {
         rc = zsync_sha1(zs, fh);
     }
+#endif
     close(fh);
 
     /* Do any requested recompression */
