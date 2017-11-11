@@ -41,6 +41,7 @@ void rcksum_end(struct rcksum_state* z);
  */
 char* rcksum_filename(struct rcksum_state* z, char* next);
 int rcksum_filehandle(struct rcksum_state* z);
+int rcksum_fileopen(struct rcksum_state * z);
 
 void rcksum_add_target_block(struct rcksum_state* z, zs_blockid b, struct rsum r, void* checksum);
 

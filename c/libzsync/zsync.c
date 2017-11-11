@@ -581,14 +581,15 @@ int zsync_rename_file(struct zsync_state *zs, const char *f) {
     char *rf = zsync_cur_filename(zs, f);
 
     if (strcmp(zs->cur_filename, f)) {
-        int x = rename(rf, f);
-
+        close(rcksum_filehandle(zs->rs));
+        int x = unlink(rf);
         if (!x) {
             free(rf);
             zs->cur_filename = strdup(f);
+            rcksum_fileopen(zs->rs);
         }
         else
-            perror("rename");
+            perror("unlink");
 
         return x;
     }

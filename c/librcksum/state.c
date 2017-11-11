@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 #ifdef WITH_DMALLOC
 # include <dmalloc.h>
@@ -119,6 +120,11 @@ int rcksum_filehandle(struct rcksum_state *rs) {
     int h = rs->fd;
     rs->fd = -1;
     return h;
+}
+
+int rcksum_fileopen(struct rcksum_state *rs) {
+    rs->fd = open(rs->filename, O_RDWR | O_CREAT);
+    return 0;
 }
 
 /* rcksum_end - destructor */
