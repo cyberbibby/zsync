@@ -31,7 +31,7 @@
 int mkstemp(char *template)
 {
     char *t = mktemp(template);
-    int fd = open(t, O_RDWR | O_CREAT | O_EXCL);
+    int fd = open(t, O_RDWR | O_CREAT | O_EXCL, 0600);
     return fd;
 }
 #endif
@@ -88,7 +88,7 @@ struct rcksum_state *rcksum_init(zs_blockid nblocks, size_t blocksize,
     if (!(z->blocksize & (z->blocksize - 1)) && z->blocks) {
         /* Create temporary file */
         if (dst_file) {
-            z->fd = open(dst_file, O_RDWR | O_CREAT);
+            z->fd = open(dst_file, O_RDWR | O_CREAT, 0600);
         } else {
             z->filename = strdup("rcksum-XXXXXX");
             z->fd = mkstemp(z->filename);
